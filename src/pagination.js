@@ -26,10 +26,21 @@ module.exports = function(list) {
 
     right = pages - right;
     pagingList.clear();
+    item = pagingList.add({
+        page: "Previous",
+        dotted: true
+    })[0];
+    if(currentPage === 1) {
+      classes(item.elm).add("disabled");
+    } else {
+      item.elm.firstChild.setAttribute('data-i', currentPage - 1);
+      item.elm.firstChild.setAttribute('data-page', page);
+    }
+
     for (var i = 1; i <= pages; i++) {
       var className = (currentPage === i) ? "active" : "";
 
-      //console.log(i, left, right, currentPage, (currentPage - innerWindow), (currentPage + innerWindow), className);
+      // console.log(i, left, right, currentPage, (currentPage - innerWindow), (currentPage + innerWindow), className);
 
       if (is.number(i, left, right, currentPage, innerWindow)) {
         item = pagingList.add({
@@ -41,29 +52,18 @@ module.exports = function(list) {
         }
         item.elm.firstChild.setAttribute('data-i', i);
         item.elm.firstChild.setAttribute('data-page', page);
-      } else if (is.dottedLeft(pagingList, i, left, right, currentPage, innerWindow)) {
-        item = pagingList.add({
-          page: "Previous",
-          dotted: true
-        })[0];
-        if(currentPage === 1) {
-          classes(item.elm).add("disabled");
-        } else {
-          item.elm.firstChild.setAttribute('data-i', i);
-          item.elm.firstChild.setAttribute('data-page', page);
-        }
-      } else if (is.dottedRight(pagingList, i, left, right, currentPage, innerWindow, pagingList.size())) {
-        item = pagingList.add({
-          page: 'Next',
-          dotted: true
-        })[0];
-        if(currentPage === pages) {
-          classes(item.elm).add("disabled");
-        } else {
-          item.elm.firstChild.setAttribute('data-i', i);
-          item.elm.firstChild.setAttribute('data-page', page);
-        }
       }
+    }
+
+    item = pagingList.add({
+        page: 'Next',
+        dotted: true
+    })[0];
+    if(currentPage === pages) {
+      classes(item.elm).add("disabled");
+    } else {
+      item.elm.firstChild.setAttribute('data-i', currentPage + 1);
+      item.elm.firstChild.setAttribute('data-page', page);
     }
   };
 
@@ -79,19 +79,6 @@ module.exports = function(list) {
     },
     innerWindow: function(i, currentPage, innerWindow) {
       return ( i >= (currentPage - innerWindow) && i <= (currentPage + innerWindow));
-    },
-    dotted: function(pagingList, i, left, right, currentPage, innerWindow, currentPageItem) {
-      return this.dottedLeft(pagingList, i, left, right, currentPage, innerWindow) || (this.dottedRight(pagingList, i, left, right, currentPage, innerWindow, currentPageItem));
-    },
-    dottedLeft: function(pagingList, i, left, right, currentPage, innerWindow) {
-      return ((i == (left + 1)) && !this.innerWindow(i, currentPage, innerWindow) && !this.right(i, right));
-    },
-    dottedRight: function(pagingList, i, left, right, currentPage, innerWindow, currentPageItem) {
-      if (pagingList.items[currentPageItem-1].values().dotted) {
-        return false;
-      } else {
-        return ((i == (right)) && !this.innerWindow(i, currentPage, innerWindow) && !this.right(i, right));
-      }
     }
   };
 
