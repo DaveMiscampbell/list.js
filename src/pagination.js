@@ -41,12 +41,28 @@ module.exports = function(list) {
         }
         item.elm.firstChild.setAttribute('data-i', i);
         item.elm.firstChild.setAttribute('data-page', page);
-      } else if (is.dotted(pagingList, i, left, right, currentPage, innerWindow, pagingList.size())) {
+      } else if (is.dottedLeft(pagingList, i, left, right, currentPage, innerWindow)) {
         item = pagingList.add({
-          page: "...",
+          page: "Previous",
           dotted: true
         })[0];
-        classes(item.elm).add("disabled");
+        if(currentPage === 1) {
+          classes(item.elm).add("disabled");
+        } else {
+          item.elm.firstChild.setAttribute('data-i', i);
+          item.elm.firstChild.setAttribute('data-page', page);
+        }
+      } else if (is.dottedRight(pagingList, i, left, right, currentPage, innerWindow, pagingList.size())) {
+        item = pagingList.add({
+          page: 'Next',
+          dotted: true
+        })[0];
+        if(currentPage === pages) {
+          classes(item.elm).add("disabled");
+        } else {
+          item.elm.firstChild.setAttribute('data-i', i);
+          item.elm.firstChild.setAttribute('data-page', page);
+        }
       }
     }
   };
