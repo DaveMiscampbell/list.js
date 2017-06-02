@@ -45,7 +45,9 @@ module.exports = function(list, options) {
     },
     values: function(values, value, searchArgument) {
       if (values.hasOwnProperty(value)) {
-        var text = toString(values[value]).toLowerCase();
+        var currentValue = values[value];
+        var textValue = JSON.parse(currentValue);
+        var text = toString(textValue[value]).toLowerCase();
 
         if (fuzzy(text, searchArgument, options)) {
           return true;

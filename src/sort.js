@@ -84,7 +84,11 @@ module.exports = function(list) {
         if (!sort.alphabet && options.insensitive) {
           sort = list.utils.naturalSort.caseInsensitive;
         }
-        return sort(itemA.values()[options.valueName], itemB.values()[options.valueName]) * multi;
+        var firstItem = itemA.values()[options.valueName];
+        var firstItemValue = JSON.parse(firstItem)[options.valueName];
+        var secondItem = itemB.values()[options.valueName];
+        var secondItemValue = JSON.parse(secondItem)[options.valueName];
+        return sort(firstItemValue, secondItemValue) * multi;
       };
     }
 
